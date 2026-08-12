@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-gray-200 dark:border-gray-800;
+  }
+  body {
+    @apply bg-white dark:bg-gray-950 text-gray-900 dark:text-gray-100;
+  }
+}
+
+@layer components {
+  .phoneme-key {
+    @apply inline-flex items-center justify-center rounded-lg px-3 py-2 text-sm font-semibold transition-all duration-200 cursor-pointer select-none min-w-[2.5rem] min-h-[2.5rem];
+  }
+  
+  .phoneme-key:hover {
+    @apply transform scale-105 shadow-lg;
+  }
+  
+  .phoneme-key:focus-visible {
+    @apply outline-2 outline-offset-2 outline-blue-500;
+  }
+
+  .grid-cell {
+    @apply w-12 h-12 flex items-center justify-center text-lg font-bold rounded-lg transition-all duration-200;
+  }
+
+  .grid-cell.correct {
+    @apply bg-green-500 text-white;
+  }
+
+  .grid-cell.present {
+    @apply bg-yellow-500 text-white;
+  }
+
+  .grid-cell.absent {
+    @apply bg-gray-300 dark:bg-gray-700 text-gray-600 dark:text-gray-400;
+  }
+
+  .grid-cell.empty {
+    @apply bg-transparent border-2 border-gray-200 dark:border-gray-700;
+  }
+
+  /* --- UPDATED BLOCK BELOW --- */
+  .word-search-cell {
+    @apply w-10 h-10 flex items-center justify-center text-sm font-semibold border border-gray-200 dark:border-gray-700 cursor-pointer transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-900;
+  }
+  /* --------------------------- */
+
+  .word-search-cell.found {
+    @apply bg-green-200 dark:bg-green-800 text-green-800 dark:text-green-200;
+  }
+
+  .word-search-cell.highlighted {
+    @apply bg-yellow-200 dark:bg-yellow-800;
+  }
+
+  .word-search-cell.selected {
+    @apply bg-blue-200 dark:bg-blue-800;
+  }
+}
