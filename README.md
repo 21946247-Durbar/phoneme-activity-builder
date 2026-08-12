@@ -75,9 +75,60 @@ Australian English uses **HCE (Harrington, Cox, and Evans)** broad phoneme symbo
 | **Git/GitHub** | Version control and collaboration |
 
 ---
-# Phoneme Activity Builder
 
-## Project Directory Structure
+## 📚 HCE Phoneme Dataset
+
+This application uses the Harrington, Cox, and Evans (HCE) phoneme symbols for Australian English.
+
+### Phoneme Groups
+
+| Group | Examples |
+|-------|----------|
+| **Plosives & Nasals** | p, b, t, d, k, g, n, m, ŋ |
+| **Fricatives & Approximants** | f, v, θ, ð, s, z, ʃ, ʒ, h, l, ɹ, w, j, tʃ, dʒ |
+| **Monophthongs** | iː, ɪ, e, eː, æ, ɐ, ɐː, ɜː, ʉː, ɔ, oː, ʊ |
+| **Diphthongs & Schwa** | æɪ, ɑe, oɪ, əʉ, æɔ, ɪə, ə |
+
+### Word Lists
+
+The corpus includes:
+
+- **30 words** with 3 phonemes (e.g., *bed* → b-e-d)
+- **30 words** with 4 phonemes (e.g., *stop* → s-t-ɔ-p)
+- **30 words** with 5 phonemes (e.g., *stamp* → s-t-æ-m-p)
+
+---
+
+## 🔧 Configuration
+
+### Theme Settings
+
+The application supports Light and Dark modes with cookie persistence:
+
+| Setting | Description |
+|---------|-------------|
+| **Theme** | Light or Dark mode |
+| **Storage** | Browser cookie (expires in 365 days) |
+
+### Difficulty Settings (Wordle)
+
+| Difficulty | Attempts | Word Length |
+|------------|----------|-------------|
+| **Easy** | 8 attempts | 3-4 phonemes |
+| **Medium** | 6 attempts | 4-5 phonemes |
+| **Hard** | 4 attempts | 5+ phonemes |
+
+### Difficulty Settings (Word Search)
+
+| Difficulty | Grid Size | Word Count | Word Length |
+|------------|-----------|------------|-------------|
+| **Easy** | 8x8 | 3 words | 3 phonemes only |
+| **Medium** | 10x10 | 5 words | 3-4 phonemes |
+| **Hard** | 12x12 | 8 words | 4-5 phonemes |
+
+---
+
+## 📁 Project Directory Structure
 
 ```text
 phoneme-activity-builder/
@@ -114,26 +165,16 @@ phoneme-activity-builder/
 ├── postcss.config.js           # PostCSS configuration
 ├── tailwind.config.js          # Tailwind CSS configuration
 └── tsconfig.json               # TypeScript configuration
----
 
-## 🚀 Getting Started
 
-### Prerequisites
-
-- **Node.js** v18 or higher
-- **npm** (comes with Node.js) or **yarn**
-
-### Installation
-
-```bash
 # 1. Clone the repository
-git clone https://github.com/21946247-Durbar/phoneme-activity-builder.git
+$ git clone [https://github.com/21946247-Durbar/phoneme-activity-builder.git](https://github.com/21946247-Durbar/phoneme-activity-builder.git)
 
 # 2. Navigate to the project folder
-cd phoneme-activity-builder
+$ cd phoneme-activity-builder
 
 # 3. Install dependencies
-npm install
+$ npm install
 
 # 4. Start the development server
-npm run dev
+$ npm run dev
