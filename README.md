@@ -178,3 +178,43 @@ $ npm install
 
 # 4. Start the development server
 $ npm run dev
+```
+
+
+
+## 📚 References
+
+The following academic and industry sources informed the design and development of this project:
+
+- **Cox, F.** (2012). *Australian English pronunciation and transcription*. Cambridge University Press.
+- **Harrington, J., & Cox, F.** (2008). *The acoustic characteristics of Australian English vowels*. Journal of Phonetics, 36(2), 328-344. [https://doi.org/10.1016/j.wocn.2007.09.002](https://doi.org/10.1016/j.wocn.2007.09.002)
+- **Moats, L.** (2020). *Speech to print: Language essentials for teachers* (3rd ed.). Paul H. Brookes Publishing.
+- **W3C Web Accessibility Initiative.** (2023). *Web Content Accessibility Guidelines (WCAG) 2.1*. [https://www.w3.org/TR/WCAG21/](https://www.w3.org/TR/WCAG21/)
+- **React Documentation.** (2024). *React: The library for web and native user interfaces*. [https://react.dev/](https://react.dev/)
+- **Tailwind CSS Documentation.** (2024). *Tailwind CSS: Utility-first CSS framework*. [https://tailwindcss.com/](https://tailwindcss.com/)
+
+---
+
+## 👨‍🎓 Student Information
+
+| Field | Details |
+|-------|---------|
+| **Name** | Sudipta Biswas Durbar |
+| **Student ID** | 21946247 |
+| **Subject** | CSE3CWA - Cloud-based Web Application |
+| **Assessment** | Assessment 1: Frontend Design & Usability |
+| **Institution** | La Trobe University |
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## Acknowledgments
+
+- **La Trobe University** for the assignment brief and guidance.
+- **Speech Pathology educators** for providing insights into classroom needs.
+- **HCE Phoneme Corpus** for providing the phoneme dataset.
