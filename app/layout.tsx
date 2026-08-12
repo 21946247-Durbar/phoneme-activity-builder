@@ -10,9 +10,9 @@ export const metadata: Metadata = {
   title: 'Phoneme Activity Builder - Speech Pathology Tool',
   description: 'Build phoneme-based Wordle and Word Search activities for Speech Pathology students and teachers.',
   keywords: 'phoneme, speech pathology, wordle, word search, HCE, Australian English',
-  authors: [{ name: 'John Doe', url: 'https://github.com/johndoe' }],
-  creator: 'John Doe',
-  publisher: 'University of Technology Sydney',
+  authors: [{ name: 'Sudipta Biswas Durbar', url: 'https://github.com/21946247-Durbar' }],
+  creator: 'Sudipta Biswas Durbar',
+  publisher: 'La Trobe University',
 };
 
 export default function RootLayout({

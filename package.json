@@ -2,6 +2,8 @@
   "name": "phoneme-activity-builder",
   "version": "0.1.0",
   "private": true,
+  "author": "Sudipta Biswas Durbar",
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
