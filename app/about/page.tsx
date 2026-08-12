@@ -106,7 +106,7 @@ export default function About() {
         </p>
         <div className="flex flex-wrap items-center gap-4">
           <a
-            href="https://github.com/[YOUR_USERNAME]/phoneme-activity-builder"
+            href="https://github.com/21946247-Durbar/phoneme-activity-builder"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-4 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-gray-800 dark:hover:bg-gray-600 text-white font-medium rounded-lg transition-colors"
