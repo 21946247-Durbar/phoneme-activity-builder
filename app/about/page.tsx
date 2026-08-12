@@ -128,50 +128,70 @@ export default function About() {
         </div>
       </section>
 
-      {/* Video Walkthrough Section */}
-      <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          📹 Video Walkthrough
-        </h2>
-        <div className="space-y-4">
-          <p className="text-sm text-gray-600 dark:text-gray-400">
-            This video walkthrough demonstrates the key features and design decisions of the Phoneme Activity Builder.
-            It covers the project scope, frontend architecture, usability considerations, and accessibility features.
-          </p>
-          <button
-            onClick={() => setVideoVisible(!videoVisible)}
-            className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-colors"
-            aria-expanded={videoVisible}
-            aria-controls="video-container"
+
+{/* Video Walkthrough Section */}
+<section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+    📹 Video Walkthrough
+  </h2>
+  <div className="space-y-4">
+    <p className="text-sm text-gray-600 dark:text-gray-400">
+      This video walkthrough demonstrates the key features and design decisions of the Phoneme Activity Builder.
+      It covers the project scope, frontend architecture, usability considerations, and accessibility features.
+    </p>
+    
+    {/* Google Drive Video Link Button */}
+    <div className="flex flex-wrap gap-3">
+      <a
+        href="https://drive.google.com/file/d/YOUR_VIDEO_ID/view?usp=sharing"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+      >
+        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M21.543 6.498C22 8.28 22 12 22 12s0 3.72-.457 5.502c-.254.985-.997 1.76-1.938 2.022C17.896 20 12 20 12 20s-5.893 0-7.605-.476c-.945-.266-1.687-1.04-1.938-2.022C2 15.72 2 12 2 12s0-3.72.457-5.502c.254-.985.997-1.76 1.938-2.022C6.107 4 12 4 12 4s5.896 0 7.605.476c.941.262 1.684 1.037 1.938 2.022zM10 15.5l6-3.5-6-3.5v7z"/>
+        </svg>
+        Watch Video Walkthrough
+      </a>
+      
+      <button
+        onClick={() => setVideoVisible(!videoVisible)}
+        className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+        aria-expanded={videoVisible}
+        aria-controls="video-container"
+      >
+        {videoVisible ? 'Hide Embedded Video' : 'Show Embedded Video'}
+      </button>
+    </div>
+    
+    {videoVisible && (
+      <div id="video-container" className="space-y-3">
+        <div className="aspect-video bg-black rounded-lg overflow-hidden">
+          <video
+            controls
+            className="w-full h-full"
+            aria-label="Project walkthrough video"
           >
-            {videoVisible ? 'Hide Video Walkthrough' : 'Show Video Walkthrough'}
-          </button>
-          {videoVisible && (
-            <div id="video-container" className="space-y-3">
-              <div className="aspect-video bg-black rounded-lg overflow-hidden">
-                <video
-                  controls
-                  className="w-full h-full"
-                  aria-label="Project walkthrough video"
-                >
-                  <source src="/walkthrough.mp4" type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-              <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">This video demonstrates:</p>
-                <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1 list-disc list-inside">
-                  <li>Design decisions and component structure</li>
-                  <li>Usability and accessibility considerations</li>
-                  <li>How the interface supports Speech Pathology students and teachers</li>
-                  <li>Trade-offs made in the frontend design</li>
-                  <li>Demonstration of all features (Wordle, Word Search, HTML export)</li>
-                </ul>
-              </div>
-            </div>
-          )}
+            <source src="/project_demonstration_video.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
         </div>
-      </section>
+        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">This video demonstrates:</p>
+          <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1 list-disc list-inside">
+            <li>Design decisions and component structure</li>
+            <li>Usability and accessibility considerations</li>
+            <li>How the interface supports Speech Pathology students and teachers</li>
+            <li>Trade-offs made in the frontend design</li>
+            <li>Demonstration of all features (Wordle, Word Search, HTML export)</li>
+          </ul>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
+
+
 
       {/* References Section */}
       <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
