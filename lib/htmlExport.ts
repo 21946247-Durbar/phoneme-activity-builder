@@ -222,11 +222,7 @@ export const generateWordleHTML = (
   <div class="container">
     <h1>🎯 Phoneme Wordle</h1>
     <p class="subtitle">Guess the ${targetWord.phonemes.length}-phoneme word</p>
-    <div class="word-display">
-      <strong>Target Word:</strong> 
-      ${targetWord.word}
-      <span style="color: #94a3b8; margin-left: 8px;">(${wordDisplay})</span>
-    </div>
+
     <div id="grid" class="grid"></div>
     <div id="message" class="message" style="display: none;"></div>
     <div id="keyboard" class="keyboard"></div>

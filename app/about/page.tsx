@@ -143,7 +143,7 @@ export default function About() {
     {/* Google Drive Video Link Button */}
     <div className="flex flex-wrap gap-3">
       <a
-        href="https://drive.google.com/file/d/YOUR_VIDEO_ID/view?usp=sharing"
+        href="https://drive.google.com/file/d/1TQJDUdLiA1EEYazgI7Ktrv1wty857bdb/view?usp=sharing"
         target="_blank"
         rel="noopener noreferrer"
         className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
@@ -172,7 +172,7 @@ export default function About() {
             className="w-full h-full"
             aria-label="Project walkthrough video"
           >
-            <source src="/project_demonstration_video.mp4" type="video/mp4" />
+            <source src="project_demonstration_video.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
