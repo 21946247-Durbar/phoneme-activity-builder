@@ -75,44 +75,45 @@ Australian English uses **HCE (Harrington, Cox, and Evans)** broad phoneme symbo
 | **Git/GitHub** | Version control and collaboration |
 
 ---
+# Phoneme Activity Builder
 
-## 📁 Project Structure
+## Project Directory Structure
+
+```text
 phoneme-activity-builder/
-├── app/ # Next.js App Router pages
-│ ├── about/ # About page
-│ │ └── page.tsx
-│ ├── components/ # Reusable React components
-│ │ ├── Footer.tsx # Site footer with student details
-│ │ ├── Navbar.tsx # Navigation with mobile menu
-│ │ ├── PhonemeKeyboard.tsx # Interactive phoneme keyboard
-│ │ ├── ThemeToggle.tsx # Light/Dark mode toggle
-│ │ ├── WordlePreview.tsx # Wordle game preview
-│ │ ├── WordListSelector.tsx # Word selection component
-│ │ └── WordSearchPreview.tsx # Word Search preview
-│ ├── settings/ # Settings page
-│ │ └── page.tsx
-│ ├── word-search/ # Word Search builder page
-│ │ └── page.tsx
-│ ├── wordle/ # Wordle builder page
-│ │ └── page.tsx
-│ ├── globals.css # Global styles
-│ ├── layout.tsx # Root layout
-│ └── page.tsx # Home page
-├── lib/ # Helper functions and logic
-│ ├── cookies.ts # Cookie management utilities
-│ ├── htmlExport.ts # HTML export generation
-│ ├── phonemeData.ts # HCE phoneme dataset
-│ ├── wordleEngine.ts # Wordle game logic
-│ └── wordSearchEngine.ts # Word Search game logic
-├── types/ # TypeScript type definitions
-│ └── index.ts
-├── next.config.js # Next.js configuration
-├── package.json # Dependencies
-├── postcss.config.js # PostCSS configuration
-├── tailwind.config.js # Tailwind CSS configuration
-└── tsconfig.json # TypeScript configuration
-
-
+├── app/                        # Next.js App Router pages
+│   ├── about/                  # About page
+│   │   └── page.tsx
+│   ├── components/             # Reusable React components
+│   │   ├── Footer.tsx          # Site footer with student details
+│   │   ├── Navbar.tsx          # Navigation with mobile menu
+│   │   ├── PhonemeKeyboard.tsx # Interactive phoneme keyboard
+│   │   ├── ThemeToggle.tsx     # Light/Dark mode toggle
+│   │   ├── WordlePreview.tsx   # Wordle game preview
+│   │   ├── WordListSelector.tsx# Word selection component
+│   │   └── WordSearchPreview.tsx # Word Search preview
+│   ├── settings/               # Settings page
+│   │   └── page.tsx
+│   ├── word-search/            # Word Search builder page
+│   │   └── page.tsx
+│   ├── wordle/                 # Wordle builder page
+│   │   └── page.tsx
+│   ├── globals.css             # Global styles
+│   ├── layout.tsx              # Root layout
+│   └── page.tsx                # Home page
+├── lib/                        # Helper functions and logic
+│   ├── cookies.ts              # Cookie management utilities
+│   ├── htmlExport.ts           # HTML export generation
+│   ├── phonemeData.ts          # HCE phoneme dataset
+│   ├── wordleEngine.ts         # Wordle game logic
+│   └── wordSearchEngine.ts     # Word Search game logic
+├── types/                      # TypeScript type definitions
+│   └── index.ts
+├── next.config.js              # Next.js configuration
+├── package.json                # Dependencies
+├── postcss.config.js           # PostCSS configuration
+├── tailwind.config.js          # Tailwind CSS configuration
+└── tsconfig.json               # TypeScript configuration
 ---
 
 ## 🚀 Getting Started
