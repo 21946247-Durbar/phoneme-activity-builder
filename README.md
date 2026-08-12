@@ -57,14 +57,6 @@ Australian English uses **HCE (Harrington, Cox, and Evans)** broad phoneme symbo
 - Preferences saved across sessions
 - Consistent visual design across all pages
 
-### ♿ Accessibility
-
-- **ARIA attributes** on all interactive elements
-- **Keyboard navigation** support
-- **Semantic HTML** structure
-- **Focus management** for screen readers
-- **Responsive design** for all devices
-
 ---
 
 ## 🛠️ Tech Stack
