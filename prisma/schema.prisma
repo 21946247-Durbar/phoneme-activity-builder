@@ -1,5 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
+// Prisma schema for Phoneme Activity Builder (Assessment 2)
+// Database: SQLite
+// Author: Sudipta Biswas Durbar (21946247)
 
 generator client {
   provider = "prisma-client"
@@ -9,4 +10,93 @@ generator client {
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
+}
+
+/// A named collection of phoneme-based words (e.g., "3-Phoneme Words")
+model WordList {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  words      Word[]
+  activities Activity[]
+}
+
+/// A single English word stored with its phoneme transcription.
+/// Phonemes are stored as separate rows in WordPhoneme to support
+/// multi-character IPA symbols (e.g., /tʃ/, /iː/, /æɪ/).
+model Word {
+  id            Int      @id @default(autoincrement())
+  listId        Int
+  english       String
+  transcription String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  list       WordList       @relation(fields: [listId], references: [id], onDelete: Cascade)
+  phonemes   WordPhoneme[]
+  activities ActivityWord[]
+
+  @@index([listId])
+}
+
+/// One row per phoneme in a word.
+/// `position` defines order (0-based). `symbol` stores the full IPA symbol
+/// (may be multi-character: tʃ, dʒ, iː, æɪ, etc.).
+model WordPhoneme {
+  id       Int    @id @default(autoincrement())
+  wordId   Int
+  symbol   String
+  position Int
+
+  word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@unique([wordId, position])
+  @@index([wordId])
+}
+
+/// Type of activity the teacher can build.
+enum ActivityType {
+  WORDLE
+  WORDSEARCH
+}
+
+/// A saved Wordle or Word Search configuration built from a WordList.
+model Activity {
+  id          Int          @id @default(autoincrement())
+  name        String
+  type        ActivityType
+  difficulty  String       @default("medium")
+  rows        Int?
+  cols        Int?
+  maxAttempts Int?
+  listId      Int
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  list  WordList       @relation(fields: [listId], references: [id], onDelete: Cascade)
+  words ActivityWord[]
+
+  @@index([listId])
+}
+
+/// Join table: which words belong to which activity.
+model ActivityWord {
+  activityId Int
+  wordId     Int
+
+  activity Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+  word     Word     @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+  @@id([activityId, wordId])
+  @@index([wordId])
+}
+
+/// Global app settings (theme, default difficulty, etc.).
+model Setting {
+  id    Int    @id @default(autoincrement())
+  key   String @unique
+  value String
 }
