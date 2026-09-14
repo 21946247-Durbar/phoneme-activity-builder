@@ -1,20 +1,34 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import WordSearchPreview from '../components/WordSearchPreview';
-import WordListSelector from '../components/WordListSelector';
-import { HCE_WORDS } from '@/lib/phonemeData';
-import { PhonemeWord } from '@/types';
-import { generateWordSearchHTML } from '@/lib/htmlExport';
+import { useState, useEffect } from "react";
+import WordSearchPreview from "../components/WordSearchPreview";
+import WordListSelector from "../components/WordListSelector";
+import { useWordLists } from "@/hooks/useWordLists";
+import { useWords } from "@/hooks/useWords";
+import { toPhonemeWord, type ApiWord } from "@/lib/apiClient";
+import type { PhonemeWord } from "@/types";
+import { generateWordSearchHTML } from "@/lib/htmlExport";
 
 export default function WordSearchPage() {
-  const [selectedWords, setSelectedWords] = useState<PhonemeWord[]>([]);
+  const { lists, loading: listsLoading } = useWordLists();
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const { words, loading: wordsLoading, error: wordsError } = useWords(
+    selectedListId ?? undefined
+  );
+
+  const [selectedWords, setSelectedWords] = useState<ApiWord[]>([]);
   const [rows, setRows] = useState(10);
   const [cols, setCols] = useState(10);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
   const [wordCount, setWordCount] = useState(5);
 
-  // Get grid size based on difficulty
+  // Auto-select first list
+  useEffect(() => {
+    if (lists.length > 0 && selectedListId === null) {
+      setSelectedListId(lists[0].id);
+    }
+  }, [lists, selectedListId]);
+
   const getGridSize = () => {
     switch (difficulty) {
       case 'easy': return { rows: 8, cols: 8 };
@@ -24,7 +38,6 @@ export default function WordSearchPage() {
     }
   };
 
-  // Get suggested word count based on difficulty
   const getSuggestedWordCount = () => {
     switch (difficulty) {
       case 'easy': return 3;
@@ -34,81 +47,52 @@ export default function WordSearchPage() {
     }
   };
 
-  // Filter words based on difficulty
   const getFilteredWordsForDifficulty = () => {
-    let filtered = [...HCE_WORDS];
     switch (difficulty) {
-      case 'easy':
-        // Easy: Only 3-phoneme words
-        filtered = filtered.filter(w => w.phonemes.length === 3);
-        break;
-      case 'medium':
-        // Medium: 3-4 phoneme words
-        filtered = filtered.filter(w => w.phonemes.length >= 3 && w.phonemes.length <= 4);
-        break;
-      case 'hard':
-        // Hard: 4-5 phoneme words
-        filtered = filtered.filter(w => w.phonemes.length >= 4 && w.phonemes.length <= 5);
-        break;
-      default:
-        break;
+      case 'easy': return words.filter((w) => w.phonemes.length === 3);
+      case 'medium': return words.filter((w) => w.phonemes.length >= 3 && w.phonemes.length <= 4);
+      case 'hard': return words.filter((w) => w.phonemes.length >= 4 && w.phonemes.length <= 5);
+      default: return words;
     }
-    return filtered;
   };
 
-  // Auto-select words based on difficulty
   const autoSelectWordsForDifficulty = () => {
-    const filteredWords = getFilteredWordsForDifficulty();
-    const shuffled = [...filteredWords].sort(() => 0.5 - Math.random());
-    const suggestedCount = getSuggestedWordCount();
-    const count = Math.min(suggestedCount, 10, shuffled.length);
-    const randomWords = shuffled.slice(0, count);
-    setSelectedWords(randomWords);
+    const filtered = getFilteredWordsForDifficulty();
+    const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+    const count = Math.min(getSuggestedWordCount(), 10, shuffled.length);
+    setSelectedWords(shuffled.slice(0, count));
   };
 
-  // Update everything when difficulty changes
   useEffect(() => {
     const { rows: newRows, cols: newCols } = getGridSize();
     setRows(newRows);
     setCols(newCols);
     setWordCount(getSuggestedWordCount());
     autoSelectWordsForDifficulty();
-  }, [difficulty]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [difficulty, words]);
 
-  // Initial load
-  useEffect(() => {
-    autoSelectWordsForDifficulty();
-  }, []);
-
-  const handleWordSelect = (word: PhonemeWord) => {
-    if (selectedWords.length < 10) {
-      setSelectedWords([...selectedWords, word]);
-    }
+  const handleWordSelect = (word: ApiWord) => {
+    if (selectedWords.length < 10) setSelectedWords([...selectedWords, word]);
   };
 
-  const handleWordDeselect = (word: PhonemeWord) => {
-    setSelectedWords(selectedWords.filter(w => w.word !== word.word));
+  const handleWordDeselect = (word: ApiWord) => {
+    setSelectedWords(selectedWords.filter((w) => w.id !== word.id));
   };
 
-  const handleClearSelection = () => {
-    setSelectedWords([]);
-  };
+  const handleClearSelection = () => setSelectedWords([]);
 
   const handleRandomSelect = () => {
-    setSelectedWords([]);
-    const filteredWords = getFilteredWordsForDifficulty();
-    const shuffled = [...filteredWords].sort(() => 0.5 - Math.random());
-    const count = Math.min(wordCount, 10, shuffled.length);
-    const randomWords = shuffled.slice(0, count);
-    setSelectedWords(randomWords);
+    autoSelectWordsForDifficulty();
   };
 
   const handleGenerateHTML = () => {
     if (selectedWords.length === 0) return;
-    const html = generateWordSearchHTML(selectedWords, rows, cols, difficulty);
-    const blob = new Blob([html], { type: 'text/html' });
+    const phonemeWords: PhonemeWord[] = selectedWords.map(toPhonemeWord);
+    const html = generateWordSearchHTML(phonemeWords, rows, cols, difficulty);
+    const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = `wordsearch-${selectedWords.length}-words.html`;
     document.body.appendChild(link);
@@ -125,49 +109,58 @@ export default function WordSearchPage() {
         </h1>
         <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
-            <label htmlFor="rows" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Rows:
+            <label htmlFor="list-select-ws" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+              List:
             </label>
+            <select
+              id="list-select-ws"
+              value={selectedListId ?? ""}
+              onChange={(e) => setSelectedListId(e.target.value ? parseInt(e.target.value) : null)}
+              disabled={listsLoading}
+              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+            >
+              {lists.map((list) => (
+                <option key={list.id} value={list.id}>
+                  {list.name} ({list._count?.words ?? 0} words)
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label htmlFor="rows" className="text-sm font-medium text-gray-700 dark:text-gray-300">Rows:</label>
             <input
               type="number"
               id="rows"
               value={rows}
               onChange={(e) => setRows(Math.min(40, Math.max(10, parseInt(e.target.value) || 10)))}
-              className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
-              aria-label="Number of rows"
+              className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               min="10"
               max="40"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="cols" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Cols:
-            </label>
+            <label htmlFor="cols" className="text-sm font-medium text-gray-700 dark:text-gray-300">Cols:</label>
             <input
               type="number"
               id="cols"
               value={cols}
               onChange={(e) => setCols(Math.min(40, Math.max(10, parseInt(e.target.value) || 10)))}
-              className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
-              aria-label="Number of columns"
+              className="w-16 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
               min="10"
               max="40"
             />
           </div>
           <div className="flex items-center gap-2">
-            <label htmlFor="word-search-difficulty" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-              Difficulty:
-            </label>
+            <label htmlFor="ws-difficulty" className="text-sm font-medium text-gray-700 dark:text-gray-300">Difficulty:</label>
             <select
-              id="word-search-difficulty"
+              id="ws-difficulty"
               value={difficulty}
               onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
-              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
-              aria-label="Select difficulty level"
+              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
             >
-              <option value="easy">Easy (8x8, 3 words, 3 phonemes)</option>
-              <option value="medium">Medium (10x10, 5 words, 3-4 phonemes)</option>
-              <option value="hard">Hard (12x12, 8 words, 4-5 phonemes)</option>
+              <option value="easy">Easy (8x8, 3 words)</option>
+              <option value="medium">Medium (10x10, 5 words)</option>
+              <option value="hard">Hard (12x12, 8 words)</option>
             </select>
           </div>
         </div>
@@ -179,8 +172,7 @@ export default function WordSearchPage() {
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
               Select Words (1-10)
             </h2>
-            
-            {/* Random Selection Controls */}
+
             <div className="flex flex-wrap items-center gap-2 mb-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
               <label htmlFor="wordCount" className="text-sm text-gray-600 dark:text-gray-400">
                 Select:
@@ -190,24 +182,21 @@ export default function WordSearchPage() {
                 id="wordCount"
                 value={wordCount}
                 onChange={(e) => setWordCount(Math.min(10, Math.max(1, parseInt(e.target.value) || 1)))}
-                className="w-12 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 text-center"
+                className="w-12 px-2 py-1 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white text-center"
                 min="1"
                 max="10"
-                aria-label="Number of words to select"
               />
               <span className="text-sm text-gray-600 dark:text-gray-400">words</span>
               <button
                 onClick={handleRandomSelect}
-                className="px-3 py-1 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg transition-colors"
-                aria-label="Select random words"
+                className="px-3 py-1 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg"
               >
                 🎲 Random
               </button>
               {selectedWords.length > 0 && (
                 <button
                   onClick={handleClearSelection}
-                  className="px-3 py-1 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors"
-                  aria-label="Clear all selected words"
+                  className="px-3 py-1 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 rounded-lg"
                 >
                   Clear All
                 </button>
@@ -217,14 +206,17 @@ export default function WordSearchPage() {
             <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">
               Selected: {selectedWords.length}/10 words
             </p>
-            
+
             <WordListSelector
+              words={words}
               selectedWords={selectedWords}
               onWordSelect={handleWordSelect}
               onWordDeselect={handleWordDeselect}
               maxWords={10}
               minWords={1}
               onClearSelection={handleClearSelection}
+              loading={wordsLoading}
+              error={wordsError}
             />
           </div>
         </div>
@@ -232,7 +224,7 @@ export default function WordSearchPage() {
         <div className="lg:col-span-2">
           {selectedWords.length >= 1 ? (
             <WordSearchPreview
-              words={selectedWords}
+              words={selectedWords.map(toPhonemeWord)}
               rows={rows}
               cols={cols}
               onGenerateHTML={handleGenerateHTML}
@@ -240,10 +232,9 @@ export default function WordSearchPage() {
           ) : (
             <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 text-center">
               <p className="text-gray-600 dark:text-gray-400">
-                Please select at least 1 word to generate a word search puzzle.
-              </p>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-                You can manually select words from the list below or use the Random button above.
+                {wordsLoading
+                  ? "Loading words..."
+                  : "Please select at least 1 word to generate a word search puzzle."}
               </p>
             </div>
           )}

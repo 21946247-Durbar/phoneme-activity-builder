@@ -1,16 +1,29 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import WordlePreview from '../components/WordlePreview';
-import WordListSelector from '../components/WordListSelector';
-import { HCE_WORDS } from '@/lib/phonemeData';
-import { PhonemeWord } from '@/types';
-import { generateWordleHTML } from '@/lib/htmlExport';
+import { useState, useEffect } from "react";
+import WordlePreview from "../components/WordlePreview";
+import WordListSelector from "../components/WordListSelector";
+import { useWordLists } from "@/hooks/useWordLists";
+import { useWords } from "@/hooks/useWords";
+import { toPhonemeWord, type ApiWord } from "@/lib/apiClient";
+import type { PhonemeWord } from "@/types";
+import { generateWordleHTML } from "@/lib/htmlExport";
 
 export default function WordlePage() {
-  const [selectedWords, setSelectedWords] = useState<PhonemeWord[]>([]);
+  const { lists, loading: listsLoading } = useWordLists();
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const { words, loading: wordsLoading, error: wordsError } = useWords(selectedListId ?? undefined);
+
+  const [selectedWords, setSelectedWords] = useState<ApiWord[]>([]);
   const [targetWord, setTargetWord] = useState<PhonemeWord | null>(null);
   const [difficulty, setDifficulty] = useState<'easy' | 'medium' | 'hard'>('medium');
+
+  // Auto-select first list
+  useEffect(() => {
+    if (lists.length > 0 && selectedListId === null) {
+      setSelectedListId(lists[0].id);
+    }
+  }, [lists, selectedListId]);
 
   // Get max attempts based on difficulty
   const getMaxAttempts = () => {
@@ -22,43 +35,42 @@ export default function WordlePage() {
     }
   };
 
-  // Filter words based on difficulty
-  const getFilteredWords = () => {
+  // Filter words for difficulty
+  const getFilteredWordsForDifficulty = () => {
     switch (difficulty) {
-      case 'easy': return HCE_WORDS.filter(w => w.phonemes.length <= 3);
-      case 'medium': return HCE_WORDS.filter(w => w.phonemes.length <= 4);
-      case 'hard': return HCE_WORDS.filter(w => w.phonemes.length >= 4);
-      default: return HCE_WORDS;
+      case 'easy': return words.filter((w) => w.phonemes.length <= 3);
+      case 'medium': return words.filter((w) => w.phonemes.length <= 4);
+      case 'hard': return words.filter((w) => w.phonemes.length >= 4);
+      default: return words;
     }
   };
 
+  // Auto-select a random target when list loads or difficulty changes
   useEffect(() => {
-    // Set a default word if none selected
-    if (selectedWords.length === 0) {
-      const filtered = getFilteredWords();
-      if (filtered.length > 0) {
-        const randomWord = filtered[Math.floor(Math.random() * filtered.length)];
-        setSelectedWords([randomWord]);
-      }
+    const filtered = getFilteredWordsForDifficulty();
+    if (filtered.length > 0) {
+      const randomWord = filtered[Math.floor(Math.random() * filtered.length)];
+      setSelectedWords([randomWord]);
+    } else {
+      setSelectedWords([]);
     }
-  }, [difficulty]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [words, difficulty]);
 
+  // Convert to PhonemeWord for the game engine
   useEffect(() => {
     if (selectedWords.length > 0) {
-      setTargetWord(selectedWords[0]);
+      setTargetWord(toPhonemeWord(selectedWords[0]));
     } else {
       setTargetWord(null);
     }
   }, [selectedWords]);
 
-  const handleWordSelect = (word: PhonemeWord) => {
-    setSelectedWords([word]);
+  const handleWordSelect = (word: ApiWord) => setSelectedWords([word]);
+  const handleWordDeselect = (_word: ApiWord) => {
+    setSelectedWords([]);
+    setTargetWord(null);
   };
-
-  const handleWordDeselect = (word: PhonemeWord) => {
-    setSelectedWords(selectedWords.filter(w => w.word !== word.word));
-  };
-
   const handleClearSelection = () => {
     setSelectedWords([]);
     setTargetWord(null);
@@ -67,9 +79,9 @@ export default function WordlePage() {
   const handleGenerateHTML = () => {
     if (!targetWord) return;
     const html = generateWordleHTML(targetWord, difficulty);
-    const blob = new Blob([html], { type: 'text/html' });
+    const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = `wordle-${targetWord.word}.html`;
     document.body.appendChild(link);
@@ -84,21 +96,50 @@ export default function WordlePage() {
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
           🎯 Wordle Activity Builder
         </h1>
-        <div className="flex items-center gap-2">
-          <label htmlFor="difficulty" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-            Difficulty:
-          </label>
-          <select
-            id="difficulty"
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
-            className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
-            aria-label="Select difficulty level"
-          >
-            <option value="easy">Easy (8 attempts, 3-4 phonemes)</option>
-            <option value="medium">Medium (6 attempts, 4-5 phonemes)</option>
-            <option value="hard">Hard (4 attempts, 5+ phonemes)</option>
-          </select>
+        <div className="flex flex-wrap items-center gap-3">
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="list-select"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              List:
+            </label>
+            <select
+              id="list-select"
+              value={selectedListId ?? ""}
+              onChange={(e) =>
+                setSelectedListId(e.target.value ? parseInt(e.target.value) : null)
+              }
+              disabled={listsLoading}
+              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+              aria-label="Select word list"
+            >
+              {lists.map((list) => (
+                <option key={list.id} value={list.id}>
+                  {list.name} ({list._count?.words ?? 0} words)
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-2">
+            <label
+              htmlFor="difficulty"
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Difficulty:
+            </label>
+            <select
+              id="difficulty"
+              value={difficulty}
+              onChange={(e) => setDifficulty(e.target.value as 'easy' | 'medium' | 'hard')}
+              className="px-3 py-1 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500"
+              aria-label="Select difficulty level"
+            >
+              <option value="easy">Easy (8 attempts)</option>
+              <option value="medium">Medium (6 attempts)</option>
+              <option value="hard">Hard (4 attempts)</option>
+            </select>
+          </div>
         </div>
       </div>
 
@@ -109,12 +150,15 @@ export default function WordlePage() {
               Select Target Word
             </h2>
             <WordListSelector
+              words={words}
               selectedWords={selectedWords}
               onWordSelect={handleWordSelect}
               onWordDeselect={handleWordDeselect}
               maxWords={1}
               minWords={1}
               onClearSelection={handleClearSelection}
+              loading={wordsLoading}
+              error={wordsError}
             />
           </div>
         </div>
@@ -129,7 +173,7 @@ export default function WordlePage() {
           ) : (
             <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 text-center">
               <p className="text-gray-600 dark:text-gray-400">
-                Please select a target word from the list to begin.
+                {wordsLoading ? "Loading words..." : "Please select a target word from the list to begin."}
               </p>
             </div>
           )}

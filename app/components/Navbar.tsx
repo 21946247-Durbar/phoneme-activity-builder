@@ -14,6 +14,7 @@ const Navbar = () => {
     { href: '/about', label: 'About' },
     { href: '/wordle', label: 'Wordle' },
     { href: '/word-search', label: 'Word Search' },
+    { href: '/word-lists', label: 'Word Lists' },
     { href: '/settings', label: 'Settings' },
   ];
 

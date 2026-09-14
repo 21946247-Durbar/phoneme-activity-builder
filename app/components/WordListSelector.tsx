@@ -1,41 +1,46 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { HCE_WORDS } from '@/lib/phonemeData';
-import { PhonemeWord } from '@/types';
+import { useState } from "react";
+import type { ApiWord } from "@/lib/apiClient";
 
 interface WordListSelectorProps {
-  selectedWords: PhonemeWord[];
-  onWordSelect: (word: PhonemeWord) => void;
-  onWordDeselect: (word: PhonemeWord) => void;
+  words: ApiWord[];
+  selectedWords: ApiWord[];
+  onWordSelect: (word: ApiWord) => void;
+  onWordDeselect: (word: ApiWord) => void;
   maxWords?: number;
   minWords?: number;
   onClearSelection?: () => void;
+  loading?: boolean;
+  error?: string | null;
 }
 
 const WordListSelector = ({
+  words,
   selectedWords,
   onWordSelect,
   onWordDeselect,
   maxWords = 10,
   minWords = 1,
   onClearSelection,
+  loading = false,
+  error = null,
 }: WordListSelectorProps) => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [filterLength, setFilterLength] = useState<number | null>(null);
 
-  const filteredWords = HCE_WORDS.filter((word) => {
-    const matchesSearch = word.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  const filteredWords = words.filter((word) => {
+    const matchesSearch =
+      word.english.toLowerCase().includes(searchTerm.toLowerCase()) ||
       word.transcription.includes(searchTerm);
     const matchesLength = filterLength ? word.phonemes.length === filterLength : true;
     return matchesSearch && matchesLength;
   });
 
-  const isSelected = (word: PhonemeWord) => {
-    return selectedWords.some(w => w.word === word.word);
-  };
+  const isSelected = (word: ApiWord) =>
+    selectedWords.some((w) => w.id === word.id);
 
-  const handleToggleWord = (word: PhonemeWord) => {
+  const handleToggleWord = (word: ApiWord) => {
     if (isSelected(word)) {
       onWordDeselect(word);
     } else if (selectedWords.length < maxWords) {
@@ -44,13 +49,25 @@ const WordListSelector = ({
   };
 
   const handleClearSelection = () => {
-    if (onClearSelection) {
-      onClearSelection();
-    } else {
-      // Default: deselect all words
-      selectedWords.forEach(word => onWordDeselect(word));
-    }
+    if (onClearSelection) onClearSelection();
+    else selectedWords.forEach((word) => onWordDeselect(word));
   };
+
+  if (loading) {
+    return (
+      <div className="py-6 text-center">
+        <p className="text-sm text-gray-500 dark:text-gray-400">Loading words...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="py-6 text-center">
+        <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -67,7 +84,7 @@ const WordListSelector = ({
         </div>
         <div className="flex gap-2">
           <select
-            value={filterLength || ''}
+            value={filterLength || ""}
             onChange={(e) => setFilterLength(e.target.value ? parseInt(e.target.value) : null)}
             className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             aria-label="Filter by phoneme length"
@@ -90,33 +107,38 @@ const WordListSelector = ({
       </div>
 
       <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-        <span>Selected: {selectedWords.length} / {maxWords} words</span>
+        <span>
+          Selected: {selectedWords.length} / {maxWords} words
+        </span>
         <span>Showing: {filteredWords.length} words</span>
       </div>
 
       <div className="max-h-96 overflow-y-auto space-y-1 border border-gray-200 dark:border-gray-700 rounded-lg p-2 bg-gray-50 dark:bg-gray-800/50">
         {filteredWords.map((word) => {
           const selected = isSelected(word);
+          const sortedPhonemes = [...word.phonemes].sort(
+            (a, b) => a.position - b.position
+          );
           return (
             <button
-              key={word.word}
+              key={word.id}
               onClick={() => handleToggleWord(word)}
               disabled={!selected && selectedWords.length >= maxWords}
               className={`w-full flex items-center justify-between px-4 py-2 rounded-lg transition-colors ${
                 selected
-                  ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
-                  : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  ? "bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300"
+                  : "hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300"
               } ${
                 !selected && selectedWords.length >= maxWords
-                  ? 'opacity-50 cursor-not-allowed'
-                  : 'cursor-pointer'
+                  ? "opacity-50 cursor-not-allowed"
+                  : "cursor-pointer"
               }`}
-              aria-label={`${selected ? 'Deselect' : 'Select'} word ${word.word}`}
+              aria-label={`${selected ? "Deselect" : "Select"} word ${word.english}`}
             >
               <span className="flex items-center gap-2">
-                <span className="font-semibold">{word.word}</span>
+                <span className="font-semibold">{word.english}</span>
                 <span className="text-sm text-gray-500 dark:text-gray-400 font-mono">
-                  {word.transcription}
+                  /{sortedPhonemes.map((p) => p.symbol).join(" ")}/
                 </span>
               </span>
               <span className="text-xs text-gray-500 dark:text-gray-400">
@@ -128,6 +150,11 @@ const WordListSelector = ({
             </button>
           );
         })}
+        {filteredWords.length === 0 && (
+          <p className="text-center text-sm text-gray-500 dark:text-gray-400 py-4">
+            No words match your search
+          </p>
+        )}
       </div>
     </div>
   );
