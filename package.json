@@ -4,17 +4,25 @@
   "private": true,
   "author": "Sudipta Biswas Durbar",
   "license": "MIT",
-
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "postinstall": "prisma generate || true",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
     "db:seed": "tsx prisma/seed.ts",
     "db:reset": "prisma migrate reset --force",
     "db:studio": "prisma studio",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev"
+    "docker:build": "docker build -t phoneme-activity-builder .",
+    "docker:run": "docker run --rm -p 3000:3000 -e NODE_ENV=production phoneme-activity-builder",
+    "docker:compose": "docker compose up --build",
+    "docker:stop": "docker compose down"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -31,8 +39,8 @@
     "@types/react-dom": "^19.3.0",
     "autoprefixer": "^10.4.16",
     "dotenv": "^17.4.2",
-    "eslint": "^8.56.0",
-    "eslint-config-next": "14.0.4",
+    "eslint": "^9.0.0",
+    "eslint-config-next": "^16.0.0",
     "postcss": "^8.4.33",
     "prisma": "^6.19.3",
     "tailwindcss": "^3.4.0",

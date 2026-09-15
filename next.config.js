@@ -1,12 +1,22 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
-  // Remove swcMinify - it's enabled by default in newer versions
-  images: {
-    domains: [],
-  },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === 'production',
+  poweredByHeader: false,
+
+  // Prisma must stay external (native binaries can't be bundled)
+  // so Next.js leaves @prisma/client and prisma as runtime requires.
+  serverExternalPackages: ['@prisma/client', 'prisma'],
+
+  // Ensure Prisma schema, migrations, and engine binaries are included
+  // inside the standalone output that Docker copies.
+  outputFileTracingIncludes: {
+    '/api/**/*': [
+      './prisma/**/*',
+      './lib/generated/prisma/**/*',
+      './node_modules/.prisma/**/*',
+      './node_modules/@prisma/**/*',
+    ],
   },
 };
 

@@ -2,9 +2,29 @@
 module.exports = {
   darkMode: 'class',
   content: [
-    './pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
+    './hooks/**/*.{js,ts,jsx,tsx,mdx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+  ],
+  safelist: [
+    // Phoneme keyboard colors returned dynamically by getPhonemeColor()
+    'bg-red-500', 'hover:bg-red-600',
+    'bg-purple-500', 'hover:bg-purple-600',
+    'bg-yellow-500', 'hover:bg-yellow-600',
+    'bg-green-500', 'hover:bg-green-600',
+    'bg-blue-500', 'hover:bg-blue-600',
+    'bg-pink-500', 'hover:bg-pink-600',
+    'bg-gray-500', 'hover:bg-gray-600',
+
+    // Wordle grid state classes
+    'grid-cell', 'grid-cell.correct', 'grid-cell.present', 'grid-cell.absent', 'grid-cell.empty',
+
+    // Word search cell states
+    'word-search-cell', 'word-search-cell.found',
+    'word-search-cell.highlighted', 'word-search-cell.selected',
+
+    // Phoneme key base
+    'phoneme-key',
   ],
   theme: {
     extend: {
@@ -28,7 +48,7 @@ module.exports = {
           approximant: '#10b981',
           monophthong: '#3b82f6',
           diphthong: '#ec4899',
-        }
+        },
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', '-apple-system', 'sans-serif'],
@@ -51,4 +71,4 @@ module.exports = {
     },
   },
   plugins: [],
-}
+};

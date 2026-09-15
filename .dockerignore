@@ -1,0 +1,56 @@
+# Dependencies
+
+node_modules
+
+# Build output
+
+.next
+out
+build
+dist
+
+# Version control
+
+.git
+.gitignore
+
+# Docker
+
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.override.yml
+
+# Docs
+
+README.md
+LICENSE
+\*.md
+
+# Env
+
+.env
+.env.local
+.env\*.local
+
+# Local DB artifacts (NOT dev.db — we need it as a base)
+
+prisma/\*.db-journal
+
+# Generated Prisma client (rebuilt inside the image)
+
+lib/generated/prisma
+
+# IDE
+
+.vscode
+.idea
+
+# Testing
+
+coverage
+
+# OS
+
+.DS_Store
+Thumbs.db
