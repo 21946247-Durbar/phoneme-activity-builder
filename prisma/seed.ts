@@ -1,6 +1,4 @@
 import { PrismaClient } from "../lib/generated/prisma/client";
-import { ActivityType } from "../lib/generated/prisma/enums";
-
 
 const prisma = new PrismaClient();
 
@@ -162,7 +160,6 @@ async function main() {
     FIVE_PHONEME_WORDS
   );
 
-  // Default settings
   const defaults = [
     { key: "theme", value: "light" },
     { key: "defaultDifficulty", value: "medium" },

@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import { ThemeProvider } from '@/lib/theme';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
   title: 'Phoneme Activity Builder - Speech Pathology Tool',
   description: 'Build phoneme-based Wordle and Word Search activities for Speech Pathology students and teachers.',
   keywords: 'phoneme, speech pathology, wordle, word search, HCE, Australian English',
-  authors: [{ name: 'Sudipta Biswas Durbar', url: 'https://github.com/21946247-Durbar' }],
+  authors: [{ name: 'Sudipta Biswas Durbar', url: 'https://github.com/durbAr404' }],
   creator: 'Sudipta Biswas Durbar',
   publisher: 'La Trobe University',
 };
@@ -21,17 +22,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="icon" href="/favicon.ico" />
+        {/* Prevent flash of wrong theme before React hydrates */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var stored = localStorage.getItem('phoneme_theme');
+                  if (!stored) {
+                    var m = document.cookie.match(/(?:^|; )phoneme_theme=([^;]*)/);
+                    stored = m ? m[1] : 'system';
+                  }
+                  var isDark = stored === 'dark' ||
+                    (stored === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                  if (isDark) document.documentElement.classList.add('dark');
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
       <body className={`${inter.className} min-h-screen flex flex-col bg-gray-50 dark:bg-gray-950 transition-colors duration-200`}>
-        <Navbar />
-        <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {children}
-        </main>
-        <Footer />
+        <ThemeProvider>
+          <Navbar />
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            {children}
+          </main>
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );

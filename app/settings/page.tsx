@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { getSettings, setSettings, getTheme, setTheme } from '@/lib/cookies';
-import ThemeToggle from '../components/ThemeToggle';
+import { getSettings, setSettings } from '@/lib/cookies';
+import { useTheme } from '@/lib/theme';
 
 export default function Settings() {
+  const { mode, setMode } = useTheme();
   const [settings, setLocalSettings] = useState<Record<string, any>>({
     difficulty: 'medium',
     maxAttempts: 6,
@@ -27,19 +28,38 @@ export default function Settings() {
 
   return (
     <div className="max-w-3xl mx-auto space-y-8">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
-        <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-600 dark:text-gray-400">Theme:</span>
-          <ThemeToggle />
-        </div>
-      </div>
+      <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Settings</h1>
 
+      {/* Appearance */}
       <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-          Preferences
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Appearance</h2>
+        <div>
+          <label className="font-medium text-gray-700 dark:text-gray-300">Theme</label>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-3">
+            Choose Light, Dark, or follow your system preference.
+          </p>
+          <div className="flex gap-2">
+            {(["light", "dark", "system"] as const).map((option) => (
+              <button
+                key={option}
+                onClick={() => setMode(option)}
+                className={`px-4 py-2 rounded-lg text-sm font-medium capitalize transition-colors ${
+                  mode === option
+                    ? "bg-primary-500 text-white"
+                    : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-600"
+                }`}
+                aria-pressed={mode === option}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
 
+      {/* Preferences */}
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">Preferences</h2>
         <div className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
@@ -127,9 +147,7 @@ export default function Settings() {
       </section>
 
       <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          About Settings
-        </h2>
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">About Settings</h2>
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Your preferences are saved using browser cookies and will persist across sessions.
           To clear your preferences, you can reset your browser cookies.
@@ -147,7 +165,7 @@ export default function Settings() {
           }}
           className="mt-4 px-4 py-2 text-sm font-medium text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-lg transition-colors"
         >
-          Reset to Defaults
+          Reset Preferences to Defaults
         </button>
       </section>
     </div>
