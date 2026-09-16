@@ -179,7 +179,7 @@ export default function About() {
 
           <div className="flex flex-wrap gap-3">
             <a
-              href="#"
+              href="https://drive.google.com/file/d/1xHfqnRZCsITkruY_xMKWY1IoLjf2oyPv/view?usp=sharing"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"

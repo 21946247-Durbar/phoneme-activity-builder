@@ -58,3 +58,8 @@ docker-compose.override.yml
 # ---------- Caches ----------
 .eslintcache
 .turbo
+
+# Video files (kept out of the repo — hosted externally)
+*.mp4
+*.mov
+*.webm
