@@ -15,22 +15,26 @@ export default function About() {
           Project Overview
         </h2>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          The <span className="font-semibold">Phoneme Activity Builder</span> is a web-based tool designed for 
-          <span className="font-semibold"> Speech Pathology students and teachers</span> to create interactive 
-          phoneme-based learning activities. This tool addresses the need for engaging, 
-          technology-enhanced resources in phonetics education.
+          The <span className="font-semibold">Phoneme Activity Builder</span> is a full-stack web application
+          for <span className="font-semibold">Speech Pathology students and teachers</span> to create interactive
+          phoneme-based Wordle and Word Search activities using HCE (Harrington, Cox, Evans) phoneme symbols
+          for Australian English.
         </p>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
-          <span className="font-semibold">Assessment 1</span> focuses only on <span className="font-semibold">frontend design and usability</span>. 
-          This version is <span className="font-semibold">client-side only</span>, with no server database. 
-          All file exports are generated dynamically as <span className="font-semibold">standalone HTML files </span> 
-          that run in any web browser, making them accessible for classroom use without internet access.
+          <span className="font-semibold">Assessment 1</span> established the frontend design and usability.
+          <span className="font-semibold"> Assessment 2</span> extends that work with a{' '}
+          <span className="font-semibold">Prisma + SQLite backend</span>,{' '}
+          <span className="font-semibold">RESTful CRUD APIs</span>,{' '}
+          <span className="font-semibold">Zod validation</span>, a{' '}
+          <span className="font-semibold">health check endpoint</span>, and{' '}
+          <span className="font-semibold">Docker containerisation</span>.
         </p>
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            <span className="font-semibold"><b>Scope Confirmation:</b></span> This application generates standalone client-side files 
-            (HTML/CSS/JS) with no server-side storage or database requirements. All functionality is 
-            contained within the browser.
+            <span className="font-semibold">Scope:</span> The application stores word lists and activity
+            settings in a SQLite database, exposes them via Next.js API routes, and generates{' '}
+            <span className="font-semibold">standalone HTML files</span> from stored data. The whole app
+            runs inside a <span className="font-semibold">Docker container</span> with baked-in seed data.
           </p>
         </div>
       </section>
@@ -55,7 +59,52 @@ export default function About() {
           </div>
           <div className="space-y-2">
             <p className="text-sm text-gray-500 dark:text-gray-400">Assessment</p>
-            <p className="font-medium text-gray-900 dark:text-white">Assessment 1: Frontend Design &amp; Usability</p>
+            <p className="font-medium text-gray-900 dark:text-white">Assessment 2: Backend Implementation &amp; Database Integration</p>
+          </div>
+        </div>
+      </section>
+
+      {/* What A2 Adds Section */}
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          What Assessment 2 Adds
+        </h2>
+        <div className="grid md:grid-cols-2 gap-4 text-sm">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white">🗄️ Database &amp; ORM</h3>
+            <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+              <li>• <span className="font-medium">Prisma 6 + SQLite</span> — 6-model schema</li>
+              <li>• Multi-character phoneme support (tʃ, iː, æɪ)</li>
+              <li>• Cascading deletes &amp; indexed relations</li>
+              <li>• Migration + idempotent seed script</li>
+            </ul>
+          </div>
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white">🔌 Backend APIs</h3>
+            <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+              <li>• RESTful CRUD for word lists, words, activities</li>
+              <li>• <span className="font-medium">Zod validation</span> on every write</li>
+              <li>• Consistent JSON errors (400 / 404 / 409 / 500)</li>
+              <li>• <span className="font-medium">/api/health</span> returns 200 OK</li>
+            </ul>
+          </div>
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white">🖥️ Frontend Integration</h3>
+            <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+              <li>• Wordle &amp; Word Search fetch words from the DB</li>
+              <li>• New <span className="font-medium">/word-lists</span> CRUD manager</li>
+              <li>• Teachers can add <span className="font-medium">arbitrary</span> phoneme words</li>
+              <li>• Standalone HTML export uses DB data</li>
+            </ul>
+          </div>
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
+            <h3 className="font-semibold text-gray-900 dark:text-white">🐳 Docker</h3>
+            <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
+              <li>• Multi-stage build (deps → builder → runner)</li>
+              <li>• Baked-in migrations + seed (reproducible)</li>
+              <li>• Non-root user, healthcheck, IPv4 binding</li>
+              <li>• One <span className="font-medium">docker build</span> + <span className="font-medium">docker run</span></li>
+            </ul>
           </div>
         </div>
       </section>
@@ -69,40 +118,38 @@ export default function About() {
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 dark:text-white">🎯 Wordle Activity</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              A phoneme-based guessing game where students use <span className="font-medium">HCE phoneme symbols</span> 
-              to solve target words. This activity supports:
+              A phoneme-based guessing game where students use <span className="font-medium">HCE phoneme symbols</span> to solve target words.
             </p>
             <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• <span className="font-medium">Phoneme recognition</span> through interactive guessing</li>
-              <li>• <span className="font-medium">6 attempts</span> with color-coded feedback</li>
-              <li>• <span className="font-medium">Interactive keyboard</span> with pronunciation hints</li>
+              <li>• Words fetched from the <span className="font-medium">database</span></li>
+              <li>• Difficulty-dependent attempts (8 / 6 / 4)</li>
+              <li>• Interactive keyboard with pronunciation hints</li>
               <li>• <span className="font-medium">Standalone HTML export</span> for offline use</li>
             </ul>
           </div>
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
             <h3 className="font-semibold text-gray-900 dark:text-white">🔍 Word Search Activity</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-              A phoneme-based word search puzzle that helps students practice 
-              <span className="font-medium"> phoneme recognition</span> and pattern matching.
+              A phoneme-based word search puzzle that helps students practice <span className="font-medium">phoneme recognition</span> and pattern matching.
             </p>
             <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• <span className="font-medium">Configurable grid</span> dimensions (10-40)</li>
-              <li>• <span className="font-medium">Interactive selection</span> with drag support</li>
-              <li>• <span className="font-medium">Show/Hide solution</span> toggle for self-assessment</li>
+              <li>• Words fetched from the <span className="font-medium">database</span></li>
+              <li>• Configurable grid + random selection</li>
+              <li>• Mouse drag <span className="font-medium">and keyboard</span> word selection</li>
               <li>• <span className="font-medium">Standalone HTML export</span> for offline use</li>
             </ul>
           </div>
         </div>
       </section>
 
-      {/* GitHub Repository Section - ABOVE VIDEO */}
+      {/* GitHub Repository Section */}
       <section className="bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
           💻 GitHub Repository
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
-          The complete source code for this project is available on GitHub. The repository includes 
-          the full commit history, demonstrating professional version control practices.
+          The complete source code is on GitHub, with a full commit history demonstrating professional
+          version control practices, including a feature branch and logical, descriptive commits.
         </p>
         <div className="flex flex-wrap items-center gap-4">
           <a
@@ -116,82 +163,70 @@ export default function About() {
             </svg>
             <span>View on GitHub</span>
           </a>
-          <span className="text-sm text-gray-500 dark:text-gray-400">
-            {/* Repository: phoneme-activity-builder */}
-          </span>
-        </div>
-        <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-          <p className="text-sm text-blue-800 dark:text-blue-300">
-            📌 <span className="font-medium">Video Walkthrough Note:</span> The video walkthrough will show the GitHub repository 
-            homepage, demonstrating professional commit history and version control practices.
-          </p>
         </div>
       </section>
 
+      {/* Video Walkthrough Section */}
+      <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+          📹 Video Walkthrough
+        </h2>
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            The video walkthrough demonstrates the backend, database, CRUD operations, Docker container,
+            and frontend-backend integration for Assessment 2.
+          </p>
 
-{/* Video Walkthrough Section */}
-<section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-  <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-    📹 Video Walkthrough
-  </h2>
-  <div className="space-y-4">
-    <p className="text-sm text-gray-600 dark:text-gray-400">
-      This video walkthrough demonstrates the key features and design decisions of the Phoneme Activity Builder.
-      It covers the project scope, frontend architecture, usability considerations, and accessibility features.
-    </p>
-    
-    {/* Google Drive Video Link Button */}
-    <div className="flex flex-wrap gap-3">
-      <a
-        href="https://drive.google.com/file/d/1TQJDUdLiA1EEYazgI7Ktrv1wty857bdb/view?usp=sharing"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
-      >
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M21.543 6.498C22 8.28 22 12 22 12s0 3.72-.457 5.502c-.254.985-.997 1.76-1.938 2.022C17.896 20 12 20 12 20s-5.893 0-7.605-.476c-.945-.266-1.687-1.04-1.938-2.022C2 15.72 2 12 2 12s0-3.72.457-5.502c.254-.985.997-1.76 1.938-2.022C6.107 4 12 4 12 4s5.896 0 7.605.476c.941.262 1.684 1.037 1.938 2.022zM10 15.5l6-3.5-6-3.5v7z"/>
-        </svg>
-        Watch Video Walkthrough
-      </a>
-      
-      <button
-        onClick={() => setVideoVisible(!videoVisible)}
-        className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
-        aria-expanded={videoVisible}
-        aria-controls="video-container"
-      >
-        {videoVisible ? 'Hide Embedded Video' : 'Show Embedded Video'}
-      </button>
-    </div>
-    
-    {videoVisible && (
-      <div id="video-container" className="space-y-3">
-        <div className="aspect-video bg-black rounded-lg overflow-hidden">
-          <video
-            controls
-            className="w-full h-full"
-            aria-label="Project walkthrough video"
-          >
-            <source src="project_demonstration_video.mp4" type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+          <div className="flex flex-wrap gap-3">
+            <a
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+            >
+              <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M21.543 6.498C22 8.28 22 12 22 12s0 3.72-.457 5.502c-.254.985-.997 1.76-1.938 2.022C17.896 20 12 20 12 20s-5.893 0-7.605-.476c-.945-.266-1.687-1.04-1.938-2.022C2 15.72 2 12 2 12s0-3.72.457-5.502c.254-.985.997-1.76 1.938-2.022C6.107 4 12 4 12 4s5.896 0 7.605.476c.941.262 1.684 1.037 1.938 2.022zM10 15.5l6-3.5-6-3.5v7z"/>
+              </svg>
+              Watch Video Walkthrough
+            </a>
+
+            <button
+              onClick={() => setVideoVisible(!videoVisible)}
+              className="px-6 py-3 bg-gray-600 hover:bg-gray-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+              aria-expanded={videoVisible}
+              aria-controls="video-container"
+            >
+              {videoVisible ? 'Hide Embedded Video' : 'Show Embedded Video'}
+            </button>
+          </div>
+
+          {videoVisible && (
+            <div id="video-container" className="space-y-3">
+              <div className="aspect-video bg-black rounded-lg overflow-hidden">
+                <video
+                  controls
+                  className="w-full h-full"
+                  aria-label="Project walkthrough video"
+                >
+                  <source src="project_demonstration_video.mp4" type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
+              </div>
+              <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
+                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">The video demonstrates:</p>
+                <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1 list-disc list-inside">
+                  <li>GitHub repository homepage and commit history</li>
+                  <li>Prisma schema walkthrough (multi-character phonemes)</li>
+                  <li>Live CRUD demonstration on word lists and words</li>
+                  <li><code className="font-mono">/api/health</code> returning 200 OK</li>
+                  <li>Docker build &amp; running container</li>
+                  <li>Generating Wordle and Word Search HTML from database data</li>
+                </ul>
+              </div>
+            </div>
+          )}
         </div>
-        <div className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg">
-          <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">This video demonstrates:</p>
-          <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1 list-disc list-inside">
-            <li>Design decisions and component structure</li>
-            <li>Usability and accessibility considerations</li>
-            <li>How the interface supports Speech Pathology students and teachers</li>
-            <li>Trade-offs made in the frontend design</li>
-            <li>Demonstration of all features (Wordle, Word Search, HTML export)</li>
-          </ul>
-        </div>
-      </div>
-    )}
-  </div>
-</section>
-
-
+      </section>
 
       {/* References Section */}
       <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
@@ -203,28 +238,32 @@ export default function About() {
         </p>
         <ul className="space-y-3 text-sm text-gray-600 dark:text-gray-400">
           <li>
-            <span className="font-medium">Cox, F.</span> (2012). <em>Australian English pronunciation and transcription</em>. 
+            <span className="font-medium">Cox, F.</span> (2012). <em>Australian English pronunciation and transcription</em>.
             Cambridge University Press.
           </li>
           <li>
-            <span className="font-medium">Harrington, J., &amp; Cox, F.</span> (2008). The acoustic characteristics of Australian English 
-            vowels. <em>Journal of Phonetics</em>, 36(2), 328-344. https://doi.org/10.1016/j.wocn.2007.09.002
+            <span className="font-medium">Harrington, J., &amp; Cox, F.</span> (2008). The acoustic characteristics of Australian English
+            vowels. <em>Journal of Phonetics</em>, 36(2), 328–344. https://doi.org/10.1016/j.wocn.2007.09.002
           </li>
           <li>
-            <span className="font-medium">Moats, L.</span> (2020). <em>Speech to print: Language essentials for teachers</em> (3rd ed.). 
+            <span className="font-medium">Moats, L.</span> (2020). <em>Speech to print: Language essentials for teachers</em> (3rd ed.).
             Paul H. Brookes Publishing.
           </li>
           <li>
-            <span className="font-medium">W3C Web Accessibility Initiative.</span> (2023). <em>Web Content Accessibility Guidelines 
-            (WCAG) 2.1</em>. https://www.w3.org/TR/WCAG21/
+            <span className="font-medium">Prisma.</span> (2024). <em>Prisma ORM documentation</em>.
+            https://www.prisma.io/docs
           </li>
           <li>
-            <span className="font-medium">React Documentation.</span> (2024). <em>React: The library for web and native user interfaces</em>.
-            https://react.dev/
+            <span className="font-medium">Docker.</span> (2024). <em>Docker documentation</em>.
+            https://docs.docker.com/
           </li>
           <li>
-            <span className="font-medium">Tailwind CSS Documentation.</span> (2024). <em>Tailwind CSS: Utility-first CSS framework</em>.
-            https://tailwindcss.com/
+            <span className="font-medium">Zod.</span> (2024). <em>Zod: TypeScript-first schema validation</em>.
+            https://zod.dev/
+          </li>
+          <li>
+            <span className="font-medium">W3C Web Accessibility Initiative.</span> (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.1</em>.
+            https://www.w3.org/TR/WCAG21/
           </li>
         </ul>
       </section>

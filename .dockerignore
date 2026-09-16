@@ -33,7 +33,7 @@ LICENSE
 .env.local
 .env\*.local
 
-# Local DB artifacts (NOT dev.db — we need it as a base)
+# Local DB artifacts (keep dev.db for baking into image)
 
 prisma/\*.db-journal
 

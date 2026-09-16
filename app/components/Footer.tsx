@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
             <span>© {currentYear} Phoneme Activity Builder</span>
             <span className="hidden sm:inline text-gray-300 dark:text-gray-700">|</span>
-            <span>Assessment 1: Frontend Design & Usability</span>
+            <span>Assessment 2: Backend Implementation &amp; Database Integration</span>
           </div>
           <div className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4 mt-2 sm:mt-0">
             <span>Student: <b>Sudipta Biswas Durbar</b></span>
