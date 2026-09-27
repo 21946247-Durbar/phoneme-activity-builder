@@ -76,8 +76,10 @@ export default function WordlePage() {
     setTargetWord(null);
   };
 
-  const handleGenerateHTML = () => {
-    if (!targetWord) return;
+  const handleGenerateHTML = async () => {
+  if (!targetWord) return;
+
+  try {
     const html = generateWordleHTML(targetWord, difficulty);
     const blob = new Blob([html], { type: "text/html" });
     const url = URL.createObjectURL(blob);
@@ -88,7 +90,35 @@ export default function WordlePage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
+
+    // Record successful generation
+    await fetch("/api/track/generation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        activityType: "WORDLE",
+        success: true,
+        wordCount: 1,
+        difficulty,
+      }),
+    }).catch(() => {});
+  } catch (err) {
+    // Record failed generation
+    await fetch("/api/track/generation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        activityType: "WORDLE",
+        success: false,
+        wordCount: 1,
+        difficulty,
+        errorMessage: err instanceof Error ? err.message : "Unknown error",
+      }),
+    }).catch(() => {});
+
+    console.error("Failed to generate Wordle HTML:", err);
+  }
+};
 
   return (
     <div className="space-y-6">

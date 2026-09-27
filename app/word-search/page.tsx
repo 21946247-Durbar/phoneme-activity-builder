@@ -86,8 +86,10 @@ export default function WordSearchPage() {
     autoSelectWordsForDifficulty();
   };
 
-  const handleGenerateHTML = () => {
-    if (selectedWords.length === 0) return;
+  const handleGenerateHTML = async () => {
+  if (selectedWords.length === 0) return;
+
+  try {
     const phonemeWords: PhonemeWord[] = selectedWords.map(toPhonemeWord);
     const html = generateWordSearchHTML(phonemeWords, rows, cols, difficulty);
     const blob = new Blob([html], { type: "text/html" });
@@ -99,7 +101,35 @@ export default function WordSearchPage() {
     link.click();
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
-  };
+
+    // Record successful generation
+    await fetch("/api/track/generation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        activityType: "WORDSEARCH",
+        success: true,
+        wordCount: selectedWords.length,
+        difficulty,
+      }),
+    }).catch(() => {});
+  } catch (err) {
+    // Record failed generation
+    await fetch("/api/track/generation", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        activityType: "WORDSEARCH",
+        success: false,
+        wordCount: selectedWords.length,
+        difficulty,
+        errorMessage: err instanceof Error ? err.message : "Unknown error",
+      }),
+    }).catch(() => {});
+
+    console.error("Failed to generate Word Search HTML:", err);
+  }
+};
 
   return (
     <div className="space-y-6">
