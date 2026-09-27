@@ -63,3 +63,8 @@ docker-compose.override.yml
 *.mp4
 *.mov
 *.webm
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
