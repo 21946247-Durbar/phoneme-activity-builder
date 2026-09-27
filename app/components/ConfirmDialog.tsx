@@ -43,7 +43,7 @@ export default function ConfirmDialog({
   const confirmClasses =
     variant === "danger"
       ? "bg-red-600 hover:bg-red-700 text-white"
-      : "bg-primary-500 hover:bg-primary-600 text-white";
+      : "bg-primary-600 hover:bg-primary-700 text-white";
 
   return (
     <div

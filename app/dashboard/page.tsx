@@ -227,7 +227,7 @@ export default function DashboardPage() {
           </div>
           <button
             onClick={load}
-            className="px-3 py-1.5 text-sm font-medium bg-primary-500 hover:bg-primary-600 text-white rounded-lg transition-colors"
+            className="px-3 py-1.5 text-sm font-medium bg-primary-600 hover:bg-primary-700 text-white rounded-lg transition-colors"
             aria-label="Refresh dashboard"
           >
             🔄 Refresh
@@ -393,7 +393,7 @@ export default function DashboardPage() {
         <div className="flex flex-wrap gap-3">
           <Link
             href="/word-lists"
-            className="px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white rounded-lg text-sm font-medium"
+            className="px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white rounded-lg text-sm font-medium"
           >
             Manage Word Lists
           </Link>

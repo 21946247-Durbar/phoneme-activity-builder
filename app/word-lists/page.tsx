@@ -386,7 +386,7 @@ export default function WordListsPage() {
             />
             <button
               type="submit"
-              className="w-full px-4 py-2 bg-primary-500 hover:bg-primary-600 text-white text-sm font-medium rounded-lg"
+              className="w-full px-4 py-2 bg-primary-600 hover:bg-primary-700 text-white text-sm font-medium rounded-lg"
             >
               Create List
             </button>

@@ -185,7 +185,7 @@ const WordlePreview = ({ targetWord, onGenerateHTML, maxAttempts = 6 }: WordlePr
                 </button>
                 <button
                   onClick={handleReset}
-                  className="px-3 py-1 text-sm font-medium text-white bg-primary-500 rounded-lg hover:bg-primary-600 transition-colors"
+                  className="px-3 py-1 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
                   aria-label="Reset game"
                 >
                   New Game

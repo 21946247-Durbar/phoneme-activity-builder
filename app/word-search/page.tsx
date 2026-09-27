@@ -219,7 +219,7 @@ export default function WordSearchPage() {
               <span className="text-sm text-gray-600 dark:text-gray-400">words</span>
               <button
                 onClick={handleRandomSelect}
-                className="px-3 py-1 text-sm font-medium text-white bg-primary-500 hover:bg-primary-600 rounded-lg"
+                className="px-3 py-1 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg"
               >
                 🎲 Random
               </button>

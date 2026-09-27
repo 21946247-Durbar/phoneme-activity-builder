@@ -17,7 +17,7 @@ export default function Home() {
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/wordle"
-            className="px-6 py-3 bg-primary-500 hover:bg-primary-600 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
+            className="px-6 py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
           >
             🎯 Build Wordle Activity
           </Link>
