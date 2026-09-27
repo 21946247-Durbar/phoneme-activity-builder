@@ -1,4 +1,5 @@
-// Prisma schema for Phoneme Activity Builder (Assessment 2)
+// Prisma schema for Phoneme Activity Builder (Assessment 3)
+// Now includes observability models: PageVisit, GenerationEvent, ActivityLog
 // Database: SQLite
 // Author: Sudipta Biswas Durbar (21946247)
 
@@ -100,3 +101,50 @@ model Setting {
   key   String @unique
   value String
 }
+
+
+/// Tracks individual page visits and dwell time for observability.
+/// One row is created when a user opens a page, and updated with the
+/// time spent when they leave.
+model PageVisit {
+  id          Int      @id @default(autoincrement())
+  path        String   // e.g. "/wordle", "/word-search"
+  sessionId   String   // anonymous client-generated ID
+  dwellMs     Int?     // milliseconds spent on page (null = still open)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([path])
+  @@index([createdAt])
+  @@index([sessionId])
+}
+
+/// Records every HTML activity generation attempt (success or failure).
+model GenerationEvent {
+  id           Int      @id @default(autoincrement())
+  activityType String   // "WORDLE" | "WORDSEARCH"
+  success      Boolean  // true = HTML generated, false = failed
+  wordCount    Int      // number of words in the generated activity
+  difficulty   String   // "easy" | "medium" | "hard"
+  errorMessage String?  // populated only when success = false
+  createdAt    DateTime @default(now())
+
+  @@index([activityType])
+  @@index([success])
+  @@index([createdAt])
+}
+
+/// General event log for alerts, warnings, and unusual states.
+model ActivityLog {
+  id        Int      @id @default(autoincrement())
+  level     String   // "info" | "warn" | "error"
+  source    String   // e.g. "wordle", "word-search", "api"
+  message   String   // human-readable description
+  metadata  String?  // optional JSON string for extra context
+  createdAt DateTime @default(now())
+
+  @@index([level])
+  @@index([source])
+  @@index([createdAt])
+}
+
