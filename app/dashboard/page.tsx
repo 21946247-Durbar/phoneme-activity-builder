@@ -409,6 +409,12 @@ export default function DashboardPage() {
           >
             Build Word Search
           </Link>
+          <Link
+  href="/activities"
+  className="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-900 dark:text-white rounded-lg text-sm font-medium"
+>
+  Saved Activities
+</Link>
           <a
             href="/api/health"
             target="_blank"
