@@ -22,19 +22,18 @@ export default function About() {
         </p>
         <p className="text-gray-600 dark:text-gray-300 mb-4">
           <span className="font-semibold">Assessment 1</span> established the frontend design and usability.
-          <span className="font-semibold"> Assessment 2</span> extends that work with a{' '}
-          <span className="font-semibold">Prisma + SQLite backend</span>,{' '}
-          <span className="font-semibold">RESTful CRUD APIs</span>,{' '}
-          <span className="font-semibold">Zod validation</span>, a{' '}
-          <span className="font-semibold">health check endpoint</span>, and{' '}
-          <span className="font-semibold">Docker containerisation</span>.
+          <span className="font-semibold"> Assessment 2</span> extended that work with a{' '}
+          <span className="font-semibold">Prisma + SQLite backend</span>, RESTful CRUD APIs, Zod validation,
+          a health check endpoint, and Docker containerisation.{' '}
+          <span className="font-semibold">Assessment 3</span> adds a{' '}
+          <span className="font-semibold">data-driven operations dashboard</span>, observability metrics,
+          a saved activities view, and end-to-end testing with Playwright, JMeter, and Lighthouse.
         </p>
         <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            <span className="font-semibold">Scope:</span> The application stores word lists and activity
-            settings in a SQLite database, exposes them via Next.js API routes, and generates{' '}
-            <span className="font-semibold">standalone HTML files</span> from stored data. The whole app
-            runs inside a <span className="font-semibold">Docker container</span> with baked-in seed data.
+            <span className="font-semibold">Scope:</span> The application stores word lists, activity settings, and usage
+            metrics in a SQLite database. Everything is exposed via Next.js API routes, previewed in a live dashboard,
+            and packaged as a reproducible Docker container with baked-in seed data.
           </p>
         </div>
       </section>
@@ -59,51 +58,51 @@ export default function About() {
           </div>
           <div className="space-y-2">
             <p className="text-sm text-gray-500 dark:text-gray-400">Assessment</p>
-            <p className="font-medium text-gray-900 dark:text-white">Assessment 2: Backend Implementation &amp; Database Integration</p>
+            <p className="font-medium text-gray-900 dark:text-white">Assessment 3: Data-driven Application &amp; Reporting</p>
           </div>
         </div>
       </section>
 
-      {/* What A2 Adds Section */}
+      {/* What Assessment 3 Adds Section */}
       <section className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-          What Assessment 2 Adds
+          What Assessment 3 Adds
         </h2>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">🗄️ Database &amp; ORM</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-white">📊 Operations Dashboard</h3>
             <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• <span className="font-medium">Prisma 6 + SQLite</span> — 6-model schema</li>
-              <li>• Multi-character phoneme support (tʃ, iː, æɪ)</li>
-              <li>• Cascading deletes &amp; indexed relations</li>
-              <li>• Migration + idempotent seed script</li>
+              <li>• Live health status and alerts</li>
+              <li>• KPI cards: lists, words, phonemes, activities</li>
+              <li>• Page visits (24h) and average time on page</li>
+              <li>• Auto-refreshes every 30 seconds</li>
             </ul>
           </div>
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">🔌 Backend APIs</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-white">📡 Observability</h3>
             <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• RESTful CRUD for word lists, words, activities</li>
-              <li>• <span className="font-medium">Zod validation</span> on every write</li>
-              <li>• Consistent JSON errors (400 / 404 / 409 / 500)</li>
-              <li>• <span className="font-medium">/api/health</span> returns 200 OK</li>
+              <li>• <span className="font-medium">PageVisit</span> table tracks visits and dwell time</li>
+              <li>• <span className="font-medium">GenerationEvent</span> records every HTML export</li>
+              <li>• <span className="font-medium">ActivityLog</span> for warnings and errors</li>
+              <li>• Metrics API at <code className="font-mono text-xs">/api/metrics</code></li>
             </ul>
           </div>
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">🖥️ Frontend Integration</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-white">📁 Saved Activities</h3>
             <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• Wordle &amp; Word Search fetch words from the DB</li>
-              <li>• New <span className="font-medium">/word-lists</span> CRUD manager</li>
-              <li>• Teachers can add <span className="font-medium">arbitrary</span> phoneme words</li>
-              <li>• Standalone HTML export uses DB data</li>
+              <li>• Every generated activity saves its configuration</li>
+              <li>• Browse all saved activities at <code className="font-mono text-xs">/activities</code></li>
+              <li>• Filter by type and reopen in the builder</li>
+              <li>• Delete outdated configurations</li>
             </ul>
           </div>
           <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4">
-            <h3 className="font-semibold text-gray-900 dark:text-white">🐳 Docker</h3>
+            <h3 className="font-semibold text-gray-900 dark:text-white">🧪 Testing</h3>
             <ul className="text-gray-600 dark:text-gray-400 mt-2 space-y-1">
-              <li>• Multi-stage build (deps → builder → runner)</li>
-              <li>• Baked-in migrations + seed (reproducible)</li>
-              <li>• Non-root user, healthcheck, IPv4 binding</li>
-              <li>• One <span className="font-medium">docker build</span> + <span className="font-medium">docker run</span></li>
+              <li>• <span className="font-medium">Playwright</span> — 4 end-to-end tests</li>
+              <li>• <span className="font-medium">JMeter</span> — staged load test x1 → x1000</li>
+              <li>• <span className="font-medium">Lighthouse</span> — accessibility score 100</li>
+              <li>• Database-backed healthcheck</li>
             </ul>
           </div>
         </div>
@@ -148,8 +147,9 @@ export default function About() {
           💻 GitHub Repository
         </h2>
         <p className="text-gray-600 dark:text-gray-400 mb-4">
-          The complete source code is on GitHub, with a full commit history demonstrating professional
-          version control practices, including a feature branch and logical, descriptive commits.
+          The complete source code is on GitHub, with a full commit history across all three assessment phases.
+          The repository includes feature branches, meaningful commits, and a production-grade README documenting
+          architecture, API endpoints, testing, and trade-offs.
         </p>
         <div className="flex flex-wrap items-center gap-4">
           <a
@@ -173,13 +173,13 @@ export default function About() {
         </h2>
         <div className="space-y-4">
           <p className="text-sm text-gray-600 dark:text-gray-400">
-            The video walkthrough demonstrates the backend, database, CRUD operations, Docker container,
-            and frontend-backend integration for Assessment 2.
+            The Assessment 3 video walkthrough demonstrates the dashboard, observability metrics, saved activities,
+            Playwright tests, JMeter load test results, and Lighthouse accessibility audit.
           </p>
 
           <div className="flex flex-wrap gap-3">
             <a
-              href="https://drive.google.com/file/d/1xHfqnRZCsITkruY_xMKWY1IoLjf2oyPv/view?usp=sharing"
+              href="#"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors shadow-md hover:shadow-lg"
@@ -208,7 +208,7 @@ export default function About() {
                   className="w-full h-full"
                   aria-label="Project walkthrough video"
                 >
-                  <source src="project_demonstration_video.mp4" type="video/mp4" />
+                  <source src="A3_demonstration_video.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>
@@ -216,11 +216,11 @@ export default function About() {
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">The video demonstrates:</p>
                 <ul className="text-sm text-gray-600 dark:text-gray-400 mt-2 space-y-1 list-disc list-inside">
                   <li>GitHub repository homepage and commit history</li>
-                  <li>Prisma schema walkthrough (multi-character phonemes)</li>
-                  <li>Live CRUD demonstration on word lists and words</li>
-                  <li><code className="font-mono">/api/health</code> returning 200 OK</li>
-                  <li>Docker build &amp; running container</li>
-                  <li>Generating Wordle and Word Search HTML from database data</li>
+                  <li>The operations dashboard with live metrics and alerts</li>
+                  <li>Observability tables and generation tracking</li>
+                  <li>Playwright end-to-end tests passing</li>
+                  <li>JMeter staged load test results (x1 → x1000)</li>
+                  <li>Lighthouse accessibility audit showing 100</li>
                 </ul>
               </div>
             </div>
@@ -260,6 +260,14 @@ export default function About() {
           <li>
             <span className="font-medium">Zod.</span> (2024). <em>Zod: TypeScript-first schema validation</em>.
             https://zod.dev/
+          </li>
+          <li>
+            <span className="font-medium">Playwright.</span> (2024). <em>Playwright documentation</em>.
+            https://playwright.dev/
+          </li>
+          <li>
+            <span className="font-medium">Apache Software Foundation.</span> (2024). <em>Apache JMeter</em>.
+            https://jmeter.apache.org/
           </li>
           <li>
             <span className="font-medium">W3C Web Accessibility Initiative.</span> (2023). <em>Web Content Accessibility Guidelines (WCAG) 2.1</em>.
