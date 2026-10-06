@@ -175,6 +175,64 @@ async function main() {
   }
 
   console.log("✅ Seeded default settings");
+
+    // Seed a few sample activities so the dashboard shows real data
+  const sampleList = await prisma.wordList.findFirst({
+    where: { name: "3-Phoneme Words" },
+    include: { words: { take: 5 } },
+  });
+
+  if (sampleList && sampleList.words.length > 0) {
+    // Check if activities already exist to keep seeding idempotent
+    const existing = await prisma.activity.count();
+    if (existing === 0) {
+      // Sample Wordle activity
+      await prisma.activity.create({
+        data: {
+          name: "Sample Wordle - 3 Phonemes",
+          type: "WORDLE",
+          difficulty: "easy",
+          maxAttempts: 8,
+          listId: sampleList.id,
+          words: {
+            create: sampleList.words.slice(0, 1).map((w) => ({ wordId: w.id })),
+          },
+        },
+      });
+
+      // Sample Word Search activity
+      await prisma.activity.create({
+        data: {
+          name: "Sample Word Search - Medium",
+          type: "WORDSEARCH",
+          difficulty: "medium",
+          rows: 10,
+          cols: 10,
+          listId: sampleList.id,
+          words: {
+            create: sampleList.words.slice(0, 5).map((w) => ({ wordId: w.id })),
+          },
+        },
+      });
+
+      // Another Wordle for variety
+      await prisma.activity.create({
+        data: {
+          name: "Sample Wordle - Medium",
+          type: "WORDLE",
+          difficulty: "medium",
+          maxAttempts: 6,
+          listId: sampleList.id,
+          words: {
+            create: sampleList.words.slice(1, 2).map((w) => ({ wordId: w.id })),
+          },
+        },
+      });
+
+      console.log("✅ Seeded 3 sample activities");
+    }
+  }
+
   console.log("🌱 Seeding complete.");
 }
 

@@ -113,6 +113,23 @@ export default function WordSearchPage() {
         difficulty,
       }),
     }).catch(() => {});
+
+    // Save this activity configuration to the database
+    if (selectedListId) {
+      await fetch("/api/activities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `Word Search - ${selectedWords.length} words (${difficulty})`,
+          type: "WORDSEARCH",
+          difficulty,
+          rows,
+          cols,
+          listId: selectedListId,
+          wordIds: selectedWords.map((w) => w.id),
+        }),
+      }).catch(() => {});
+    }
   } catch (err) {
     // Record failed generation
     await fetch("/api/track/generation", {

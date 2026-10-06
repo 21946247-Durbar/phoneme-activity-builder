@@ -102,6 +102,22 @@ export default function WordlePage() {
         difficulty,
       }),
     }).catch(() => {});
+
+    // Save this activity configuration to the database
+    if (selectedListId) {
+      await fetch("/api/activities", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: `Wordle - ${targetWord.word} (${difficulty})`,
+          type: "WORDLE",
+          difficulty,
+          maxAttempts: getMaxAttempts(),
+          listId: selectedListId,
+          wordIds: selectedWords.map((w) => w.id),
+        }),
+      }).catch(() => {});
+    }
   } catch (err) {
     // Record failed generation
     await fetch("/api/track/generation", {
