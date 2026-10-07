@@ -93,15 +93,15 @@ npx prisma db seed
 
 # 6. Run the dev server
 npm run dev
-
+```
 ---
 
 **Open http://localhost:3000**
 
 ### Docker
 
-```
 
+```
 # Build the image (multi-stage, includes baked-in seed data)
 
 docker build -t phoneme-activity-builder .
