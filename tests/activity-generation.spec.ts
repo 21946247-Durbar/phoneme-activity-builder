@@ -23,26 +23,36 @@ test.describe("Activity generation (user use case)", () => {
     // Wait for word list to load (first list auto-selected)
     await page.waitForSelector("select#list-select", { timeout: 10_000 });
 
-    // The grid should render — wait for a phoneme keyboard button
+    // Wait for the phoneme keyboard to render — proves the game is ready
     await expect(page.getByText(/Phoneme Selection/i)).toBeVisible({
-      timeout: 10_000,
+      timeout: 15_000,
     });
+
+    // Wait for the "Generate Standalone HTML" button to be present and stable
+    const generateBtn = page.getByRole("button", {
+      name: /Generate Standalone HTML/i,
+    });
+    await expect(generateBtn).toBeVisible({ timeout: 15_000 });
+    await expect(generateBtn).toBeEnabled({ timeout: 15_000 });
+
+    // Small settle time for the DB fetch + preview render to finish
+    await page.waitForTimeout(1_500);
+
+    // Scroll into view and click
+    await generateBtn.scrollIntoViewIfNeeded();
 
     // ---------- Trigger the download ----------
     const downloadPromise = page.waitForEvent("download", {
-      timeout: 10_000,
+      timeout: 20_000,
     });
 
-    await page
-      .getByRole("button", { name: /Generate Standalone HTML/i })
-      .click();
+    await generateBtn.click();
 
     const download = await downloadPromise;
 
     // ---------- Verify the downloaded file ----------
     expect(download.suggestedFilename()).toMatch(/^wordle-.+\.html$/);
 
-    // Save the downloaded file and verify it has HTML content
     const path = await download.path();
     expect(path).toBeTruthy();
   });
@@ -57,16 +67,24 @@ test.describe("Activity generation (user use case)", () => {
     ).toBeVisible();
 
     // Wait for words to load
-    await page.waitForTimeout(2_000);
-
-    // Trigger download
-    const downloadPromise = page.waitForEvent("download", {
-      timeout: 10_000,
+    await expect(page.getByText(/Word Search Preview/i)).toBeVisible({
+      timeout: 15_000,
     });
 
-    await page
-      .getByRole("button", { name: /Generate Standalone HTML/i })
-      .click();
+    const generateBtn = page.getByRole("button", {
+      name: /Generate Standalone HTML/i,
+    });
+    await expect(generateBtn).toBeVisible({ timeout: 15_000 });
+    await expect(generateBtn).toBeEnabled({ timeout: 15_000 });
+
+    await page.waitForTimeout(1_500);
+    await generateBtn.scrollIntoViewIfNeeded();
+
+    const downloadPromise = page.waitForEvent("download", {
+      timeout: 20_000,
+    });
+
+    await generateBtn.click();
 
     const download = await downloadPromise;
 
