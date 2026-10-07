@@ -2,7 +2,7 @@
 
 A full-stack, database-driven web application for **Speech Pathology educators** to create interactive **phoneme-based** Wordle and Word Search activities using HCE (Harrington, Cox, Evans) phoneme symbols for Australian English.
 
-The project is built across four assessments in CSE3CWA. **Assessment 3** extends the earlier phases with a **data-driven operations dashboard**, **observability metrics**, **Playwright end-to-end tests**, **JMeter load testing**, and a **Lighthouse accessibility audit**.
+The project is built across four assessments in CSE3CWA. **Assessment 3** extends the earlier phases with a **data-driven operations dashboard**, **observability metrics**, **saved activity management**, **Playwright end-to-end tests**, **JMeter load testing**, and a **Lighthouse accessibility audit**.
 
 ---
 
@@ -14,6 +14,7 @@ The Phoneme Activity Builder allows Speech Pathology teachers to:
 - Create **phoneme-based Wordle games** using HCE phoneme symbols
 - Generate **phoneme-based Word Search puzzles**
 - Export **standalone HTML files** that run offline in any browser
+- **Save and reopen activity configurations** from the database
 - **Monitor system usage** via a real-time operations dashboard
 
 ### Who is this for?
@@ -29,15 +30,18 @@ Australian English uses **HCE (Harrington, Cox, Evans)** broad phoneme symbols. 
 
 ## 🆕 What Assessment 3 Adds
 
-| Feature             | Assessment 2 | Assessment 3                                            |
-| ------------------- | ------------ | ------------------------------------------------------- |
-| Observability       | ❌           | ✅ `PageVisit`, `GenerationEvent`, `ActivityLog` models |
-| Dashboard           | ❌           | ✅ `/dashboard` with live metrics and alerts            |
-| Metrics API         | ❌           | ✅ `/api/metrics` aggregating usage data                |
-| Time tracking       | ❌           | ✅ Client-side page-visit and dwell-time tracking       |
-| Generation tracking | ❌           | ✅ Success/failure recorded on every HTML export        |
-| Testing             | ❌           | ✅ Playwright E2E tests + JMeter load tests             |
-| Accessibility       | ❌           | ✅ Lighthouse audit (Accessibility 100)                 |
+| Feature                     | Assessment 2 | Assessment 3                                                 |
+| --------------------------- | ------------ | ------------------------------------------------------------ |
+| Observability               | ❌           | ✅ `PageVisit`, `GenerationEvent`, `ActivityLog` models      |
+| Dashboard                   | ❌           | ✅ `/dashboard` with live metrics and alerts                 |
+| Metrics API                 | ❌           | ✅ `/api/metrics` aggregating usage data                     |
+| Time tracking               | ❌           | ✅ Client-side page-visit and dwell-time tracking            |
+| Generation tracking         | ❌           | ✅ Success/failure recorded on every HTML export             |
+| Saved activities UI         | ❌           | ✅ `/activities` page to browse and reopen configurations    |
+| Database-backed healthcheck | ❌           | ✅ `/api/health` pings the DB and returns 503 if unreachable |
+| Docker persistent volume    | ❌           | ✅ Named volume keeps the DB across container restarts       |
+| Testing                     | ❌           | ✅ Playwright E2E tests + JMeter load tests                  |
+| Accessibility               | ❌           | ✅ Lighthouse audit (Accessibility 100)                      |
 
 ---
 
@@ -84,12 +88,11 @@ cp .env.example .env
 # 4. Apply migrations and create the SQLite database
 npx prisma migrate dev
 
-# 5. Seed with 90 phoneme words and default settings
+# 5. Seed with 90 phoneme words, default settings, and sample activities
 npx prisma db seed
 
 # 6. Run the dev server
 npm run dev
-```
 
 ---
 
@@ -98,18 +101,32 @@ npm run dev
 ### Docker
 
 ```
+
 # Build the image (multi-stage, includes baked-in seed data)
+
 docker build -t phoneme-activity-builder .
 
-# Run the container
-docker run -d --name phoneme-builder -p 3000:3000 phoneme-activity-builder
+# Run the container with persistent storage
 
-# Verify health
-curl http://localhost:3000/api/health
+docker compose up -d
+
+# Verify health (DB connectivity is checked)
+
+curl http://localhost:3001/api/health
+
 ```
 
-The Docker image uses a multi-stage build (`deps` → `builder` → `runner`), bakes `prisma migrate deploy` and `prisma db seed` into the build, runs as a non-root user, and includes a healthcheck against `/api/health`.
+The Docker setup uses:
 
+- A **multi-stage build** (deps → builder → runner) that bakes migrations and seed data into the image
+
+- A **named volume** (phoneme-prisma → /app/prisma) so data survives container restarts
+
+- A **non-root user** for security
+
+- A **healthcheck** that verifies the database is reachable
+
+- Default port mapping 3001:3000 (dev server can stay on 3000)
 ---
 
 ## 🗄️ Database Schema
@@ -145,16 +162,18 @@ Storing phonemes as a delimited string would break for multi-character symbols l
 Solution: a `WordPhoneme` table where each phoneme is its own row with an explicit position field. This correctly handles 1-, 2-, and 3-character IPA symbols, preserves order deterministically, and enables clean querying.
 
 ```
-model WordPhoneme {
-  id       Int      @id @default(autoincrement())
-  wordId   Int
-  symbol   String
-  position Int
-  word     Word     @relation(fields: [wordId], references: [id], onDelete: Cascade)
 
-  @@unique([wordId, position])
+model WordPhoneme {
+id Int @id @default(autoincrement())
+wordId Int
+symbol String
+position Int
+word Word @relation(fields: [wordId], references: [id], onDelete: Cascade)
+
+@@unique([wordId, position])
 }
-```
+
+````
 
 ## 📡 API Endpoints
 
@@ -184,6 +203,7 @@ All endpoints return consistent JSON: `{ success: boolean, data?: T, error?: str
 
 Every POST/PUT request is validated with Zod (`lib/validators.ts`). Invalid input returns `400` with per-field details. Missing resources return `404`. Unique-constraint returns `409`. Unhandled errors return `500` with a generic message (details logged server-side only).
 
+The `/api/health` endpoint returns `200` when the database is reachable and `503` when it is not — a proper dependency check rather than a static response.
 ---
 
 ## 📊 Dashboard (`/dashboard`)
@@ -202,6 +222,21 @@ The operations dashboard presents real-time system health and usage:
 Auto-refreshes every 30 seconds. All numbers are sourced from the database.
 
 ---
+
+
+---
+## 📁 Saved Activities (/activities)
+Every time a Wordle or Word Search is generated, its configuration is saved to the database as an Activity. The /activities page lists every saved configuration with:
+
+- **Type badge** (WORDLE / WORDSEARCH)
+- **Name**, difficulty, grid size, and attempt count
+- **Source word list** and word count
+- **Open in builder** button linking to the correct builder
+- **Delete** button for removing outdated configurations
+
+This closes the loop on the A2 feedback and makes the Activity model fully integrated into the frontend.
+---
+
 
 ## 🎮 Features
 
@@ -265,7 +300,7 @@ npm run dev
 
 # In another terminal:
 npx playwright test
-```
+````
 
 View HTML report:
 
